@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: brandnewstore
+      POSTGRES_USER: brandnew
+      POSTGRES_PASSWORD: change-this-db-password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: change-this-in-production
+      FLASK_ENV: production
+      SESSION_COOKIE_SECURE: "false"
+      DATABASE_URL: postgresql+psycopg://brandnew:change-this-db-password@db:5432/brandnewstore
+      STORE_NAME: BRAND NEW STORE 0.2
+      STORE_PHONE: +8801XXXXXXXXX
+      STORE_WHATSAPP: 8801XXXXXXXXX
+      STORE_ADDRESS: Bangladesh
+      INSIDE_CITY_CHARGE: "60"
+      OUTSIDE_CITY_CHARGE: "120"
+      FREE_DELIVERY_THRESHOLD: "3000"
+      BKASH_NUMBER: 01XXXXXXXXX
+      NAGAD_NUMBER: 01XXXXXXXXX
+      SMS_ENABLED: "false"
+    volumes:
+      - uploads:/app/app/static/uploads
+
+volumes:
+  postgres_data:
+  uploads:
